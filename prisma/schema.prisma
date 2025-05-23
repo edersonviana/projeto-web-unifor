@@ -1,0 +1,54 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ESTUDANTE
+  FUNCIONARIO
+  ADMIN
+}
+
+enum TipoUsuario {
+  ESTUDANTE
+  FUNCIONARIO
+}
+
+enum DiasSemana {
+  DOMINGO
+  SEGUNDA_FEIRA
+  TERCA_FEIRA
+  QUARTA_FEIRA
+  QUINTA_FEIRA
+  SEXTA_FEIRA
+  SABADO
+}
+
+model Usuario {
+  id             String     @id @default(uuid())
+  matricula      String     @unique
+  senha          String     
+  nome           String
+  cpf            String?
+  role           Role       
+
+  @@map("usuario")
+}
+
+model Evento {
+  id             String     @id @default(uuid())
+  titulo         String
+  descricao      String?  
+  hora_inicio    DateTime
+  hora_fim       DateTime  
+  local          String
+  dia_semana     DiasSemana
+  tipo_usuario   TipoUsuario   
+
+  @@map("evento")
+}
