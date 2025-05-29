@@ -48,7 +48,8 @@ model Evento {
   hora_fim       DateTime  
   local          String
   dia_semana     DiasSemana
-  tipo_usuario   TipoUsuario   
+  tipo_usuario   TipoUsuario
+  datasCancelamento DateTime[]
 
   @@map("evento")
 }

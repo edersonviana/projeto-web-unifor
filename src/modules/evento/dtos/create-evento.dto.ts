@@ -23,4 +23,8 @@ export class CreateEventoDto {
 
   @IsEnum(TipoUsuario)
   tipo_usuario: TipoUsuario;
+
+  @IsOptional()
+  @IsString()
+  datasCancelamento: Date[];
 }
