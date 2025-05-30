@@ -10,12 +10,18 @@ export class EventoService {
   async create(data: CreateEventoDto) {
     return await this.prisma.evento.create({
       data: {
-        ...data,
-        dia_semana: data.dia_semana as DiasSemana,
-        tipo_usuario: data.tipo_usuario as TipoUsuario,
+        titulo: data.titulo,
+        descricao: data.descricao,
+        horaInicio: new Date(data.horaInicio),
+        horaFim: new Date(data.horaFim),
+        local: data.local,
+        diaSemana: data.diaSemana,
+        tipoUsuario: data.tipoUsuario,
+        datasCancelamento: data.datasCancelamento?.map(d => new Date(d)),
       },
     });
   }
+
 
   async findAll() {
     return this.prisma.evento.findMany();
@@ -57,8 +63,8 @@ export class EventoService {
       where: { id },
       data: {
         ...data,
-        dia_semana: data.dia_semana as DiasSemana,
-        tipo_usuario: data.tipo_usuario as TipoUsuario,
+        diaSemana: data.diaSemana as DiasSemana,
+        tipoUsuario: data.tipoUsuario as TipoUsuario,
         datasCancelamento: data.datasCancelamento ? data.datasCancelamento : eventoExistente.datasCancelamento,
       },
     });

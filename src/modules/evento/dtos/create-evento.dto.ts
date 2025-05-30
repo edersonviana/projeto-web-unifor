@@ -10,21 +10,21 @@ export class CreateEventoDto {
   descricao?: string;
 
   @IsDateString()
-  hora_inicio: string;
+  horaInicio: string;
 
   @IsDateString()
-  hora_fim: string;
+  horaFim: string;
 
   @IsString()
   local: string;
 
   @IsEnum(DiasSemana)
-  dia_semana: DiasSemana;
+  diaSemana: DiasSemana;
 
   @IsEnum(TipoUsuario)
-  tipo_usuario: TipoUsuario;
+  tipoUsuario: TipoUsuario;
 
   @IsOptional()
-  @IsString()
+  @IsDateString()
   datasCancelamento: Date[];
 }
