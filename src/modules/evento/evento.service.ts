@@ -32,6 +32,38 @@ export class EventoService {
     });
   }
 
+  async updateCancelamento(id: string, data: Partial<UpdateEventoDto>) {
+    const eventoExistente = await this.prisma.evento.findUnique({
+      where: { id },
+    });
+    if (!eventoExistente) {
+      throw new Error(`Evento with id ${id} not found`);
+    }
+
+    let datasJaCanceladas: Date[] = eventoExistente.datasCancelamento || [];
+
+    if (data.datasCancelamento && datasJaCanceladas.some(dataJaCancelada => data.datasCancelamento?.includes(dataJaCancelada))) {
+      // Remove the dates that are already cancelled from datasJaCanceladas
+      datasJaCanceladas = datasJaCanceladas.filter(dataJaCancelada => !data.datasCancelamento?.includes(dataJaCancelada));
+    }
+
+    if (data.datasCancelamento && !datasJaCanceladas.some(dataJaCancelada => data.datasCancelamento?.includes(dataJaCancelada))) {
+      datasJaCanceladas.push(...data.datasCancelamento);
+    }
+
+    data.datasCancelamento = datasJaCanceladas;
+
+    return this.prisma.evento.update({
+      where: { id },
+      data: {
+        ...data,
+        dia_semana: data.dia_semana as DiasSemana,
+        tipo_usuario: data.tipo_usuario as TipoUsuario,
+        datasCancelamento: data.datasCancelamento ? data.datasCancelamento : eventoExistente.datasCancelamento,
+      },
+    });
+  }
+
   async remove(id: string) {
     return this.prisma.evento.delete({ where: { id } });
   }

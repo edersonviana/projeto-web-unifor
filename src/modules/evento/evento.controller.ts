@@ -34,6 +34,13 @@ export class EventoController {
     return this.eventoService.update(id, updateEventoDto);
   }
 
+  @Put('cancelamento/:id')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('ADMIN') // Apenas admins podem acessar
+  updatePartial(@Param('id') id: string, @Body() updateEventoDto: Partial<UpdateEventoDto>) {
+    return this.eventoService.updateCancelamento(id, updateEventoDto);
+  }
+
   @Delete(':id')
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('ADMIN') // Apenas admins podem acessar
