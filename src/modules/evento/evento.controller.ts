@@ -1,11 +1,10 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, UseGuards, Request } from '@nestjs/common';
 import { EventoService } from './evento.service';
 import { CreateEventoDto } from './dtos/create-evento.dto';
 import { UpdateEventoDto } from './dtos/update-evento.dto';
 import { Roles } from 'src/modules/auth/roles.decorator';
 import { AuthGuard } from 'src/modules/auth/auth.guard';
 import { RolesGuard } from 'src/modules/auth/roles.guard';
-import { Request } from 'express';
 
 @Controller('eventos')
 export class EventoController {
@@ -19,8 +18,11 @@ export class EventoController {
   }
 
   @Get()
-  findAll(@Req() req: Request) {
-    return this.eventoService.findAll(req);
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('ADMIN', 'ESTUDANTE', 'FUNCIONARIO') // Apenas admins podem acessar
+  findAll(@Request() req) {
+    const user = req.user; // Obtém o usuário autenticado do request
+    return this.eventoService.findAll(user);
   }
 
   @Get(':id')

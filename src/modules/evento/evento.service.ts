@@ -3,9 +3,6 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateEventoDto } from './dtos/create-evento.dto';
 import { UpdateEventoDto } from './dtos/update-evento.dto';
 import { TipoUsuario, DiasSemana } from '@prisma/client';
-import { getToken } from '../utils/getToken';
-import { getUserByToken } from '../utils/getUserByToken';
-import { Request } from 'express';
 @Injectable()
 export class EventoService {
   constructor(private prisma: PrismaService) { }
@@ -26,16 +23,7 @@ export class EventoService {
   }
 
 
-  async findAll(req: Request) {
-    const token = await getToken(req);
-    if (!token) {
-      throw new Error('Erro ao fazer a requisição');
-    }
-
-    const user = await getUserByToken(token, this.prisma);
-    if (!user) {
-      throw new Error('Usuário não encontrado');
-    }
+  async findAll(user) {
     if (user.role === 'ADMIN') {
       return this.prisma.evento.findMany();
     } else if (user.role === 'ESTUDANTE') {
