@@ -25,6 +25,7 @@ export class CreateEventoDto {
   tipoUsuario: TipoUsuario;
 
   @IsOptional()
-  @IsDateString()
-  datasCancelamento: Date[];
+  @IsString({ each: true })
+  @IsDateString({}, { each: true })
+  datasCancelamento?: string[];
 }

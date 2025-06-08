@@ -68,16 +68,24 @@ export class EventoService {
 
     let datasJaCanceladas: Date[] = eventoExistente.datasCancelamento || [];
 
-    if (data.datasCancelamento && datasJaCanceladas.some(dataJaCancelada => data.datasCancelamento?.includes(dataJaCancelada))) {
-      // Remove the dates that are already cancelled from datasJaCanceladas
-      datasJaCanceladas = datasJaCanceladas.filter(dataJaCancelada => !data.datasCancelamento?.includes(dataJaCancelada));
+    if (data.datasCancelamento && data.datasCancelamento.length > 0) {
+      const dataParaAtualizar = data.datasCancelamento[0];
+      const existe = datasJaCanceladas.some(
+        d => new Date(d).getTime() === new Date(dataParaAtualizar).getTime()
+      );
+      if (existe) {
+        // Remove a data se já existe
+        datasJaCanceladas = datasJaCanceladas.filter(
+          d => new Date(d).getTime() !== new Date(dataParaAtualizar).getTime()
+        );
+      } else {
+        // Adiciona a data se não existe
+        datasJaCanceladas.push(new Date(dataParaAtualizar));
+      }
     }
 
-    if (data.datasCancelamento && !datasJaCanceladas.some(dataJaCancelada => data.datasCancelamento?.includes(dataJaCancelada))) {
-      datasJaCanceladas.push(...data.datasCancelamento);
-    }
-
-    data.datasCancelamento = datasJaCanceladas;
+    // Converta para string ISO antes de salvar
+    data.datasCancelamento = datasJaCanceladas.map(d => d.toISOString());
 
     return this.prisma.evento.update({
       where: { id },
