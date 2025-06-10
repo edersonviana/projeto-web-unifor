@@ -30,6 +30,10 @@ export class AuthService {
         });
         return {
             accessToken,
+            user: {
+                ...user,
+                senha: undefined, // Não retornar a senha
+            }
         };
     }
 
